@@ -1,0 +1,168 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Roboto+Mono:wght@300;400;500;700&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  background-color: #f7f7f7;
+  color: #555;
+}
+
+h1 {
+  font-size: 21px;
+  font-weight: 300;
+}
+
+h2 {
+  font-size: 28px;
+}
+
+h3 {
+  font-size: 24px;
+}
+
+p {
+  font-size: 16px;
+  line-height: 1.8;
+}
+p a {
+  color: #5535af;
+  text-decoration: none;
+}
+p a:hover {
+  text-decoration: underline;
+}
+
+code {
+  background-color: #f2effa;
+  color: #5535af;
+  padding: 0 0.35em;
+}
+
+.container {
+  max-width: 730px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+header {
+  background-color: #5535af;
+  color: #fff;
+  padding: 36px 0;
+}
+header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+@media screen and (max-width: 420px) {
+  header .container {
+    flex-direction: column;
+  }
+}
+header .container img#logo {
+  width: 170px;
+}
+header .container h1 {
+  position: relative;
+  top: 0.2em;
+}
+
+main {
+  padding: 100px 0;
+}
+main .container article h2 {
+  margin-bottom: 60px;
+}
+main .container article h3 {
+  margin-bottom: 22px;
+}
+main .container article p {
+  margin-bottom: 60px;
+}
+main .container article p:last-child {
+  margin-bottom: 0;
+}
+main .container article p span.endpoint {
+  font-family: "Roboto Mono", monospace;
+  background-color: #f2effa;
+  border-radius: 6px;
+  font-size: 18px;
+  padding: 0.35em 0.6em;
+  color: #5535af;
+  font-weight: 500;
+}
+main .container article .codeblock {
+  font-family: "Roboto Mono", monospace;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 60px;
+}
+main .container article .codeblock .codeblock-header {
+  background-color: #5535af;
+  color: #fff;
+  padding: 10px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+main .container article .codeblock .codeblock-header span.method {
+  font-size: 22px;
+  font-weight: 700;
+}
+main .container article .codeblock .codeblock-header span.endpoint {
+  font-size: 16px;
+  font-weight: 400;
+  opacity: 0.5;
+}
+main .container article .codeblock .codeblock-body {
+  background-color: #f2effa;
+  padding: 36px;
+  font-size: 16px;
+  line-height: 1.6;
+  white-space: nowrap;
+  overflow-x: scroll;
+}
+main .container article .codeblock .codeblock-body span.key {
+  color: #5535af;
+}
+main .container article .codeblock .codeblock-body span.value {
+  color: #149447;
+}
+
+footer {
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #7e7e7e;
+}
+footer ul {
+  list-style: none;
+}
+footer ul li {
+  font-size: 14px;
+  display: inline-block;
+}
+footer ul li::before {
+  content: "|";
+  margin: 0 12px;
+}
+footer ul li:first-child {
+  font-weight: 700;
+}
+footer ul li:first-child::before {
+  content: none;
+}
+footer ul li a {
+  text-decoration: none;
+  color: inherit;
+}
+footer ul li a:hover {
+  color: #535353;
+}
+
+/*# sourceMappingURL=api.css.map */

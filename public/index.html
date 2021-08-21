@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"> 
+  <title>GoTiny</title>
+
+  <script defer src="./index.js"></script>
+  <link rel="stylesheet" href="./styles/main.css">
+
+  <script src="https://unpkg.com/vue@3.0.5/dist/vue.global.prod.js"></script>
+
+</head>
+
+<body>
+
+  <header>
+    <img src="./assets/logo.svg" alt="gotiny.cc" id="logo">
+    <h1>the most lightweight link shortener API</h1>
+      <div id="app" ref="headWrapper">
+        <div :class="['app-container', showOutput ? 'output' : 'input', {error : error}]">
+          <div class="link-input">
+            <form v-if="!showOutput" @submit.prevent="goTiny">
+              <input type="text" name="full" id="full" placeholder="Paste in URL…" v-model="userInput" ref="userInput">
+              <button>Go Tiny!</button>
+            </form>
+          </div>
+          <div class="link-output" v-if="showOutput">
+            <div v-if="showLinkCopied" id="linkCopied">Link copied!</div>
+            <span @click="copyLink">{{ output }}</span>
+            <button @click="closeOutput">Close</button>
+          </div>
+        </div>
+        <div class="error-message">{{ errorMessage }}</div>
+      </div>
+  </header>
+  <main>
+    <section id="features">
+      <div class="feature-block" id="fast">
+        <div class="feature-img">
+          <img src="./assets/icn_fast.svg" alt="fast">
+        </div>
+        <h2>Fast</h2>
+        <p>GoTiny is stripped down to just the bare minimals for <span>extremely fast performance</span>. With an
+          average processing time of just ~21ms, nothing comes between you and the web.</p>
+      </div>
+      <div class="feature-block" id="secure">
+        <div class="feature-img">
+          <img src="./assets/icn_secure.svg" alt="secure">
+        </div>
+        <h2>Secure</h2>
+        <p>Privacy is important. GoTiny does not handle, collect or store <span>any user information</span>. In fact,
+          did you notice the cookie compliance pop-up when visiting this page? Yeah, neither did we. </p>
+      </div>
+      <div class="feature-block" id="accessible">
+        <div class="feature-img">
+          <img src="./assets/icn_accessible.svg" alt="accessible">
+        </div>
+        <h2>Accessible</h2>
+        <p>You get a short link! You get a short link! Everybody gets a short link! With our <a href="/api">easy to use
+            API</a>, you can set up GoTiny into your projects in literally seconds.</p>
+      </div>
+    </section>
+    <section id="integration">
+      <div id="discord">
+        <img src="./assets/integration_discord.png" alt="discord">
+        <div class="title">gotiny<span>BOT</span></div>
+        <div class="online-label"><span></span>online</div>
+        <a href="https://discord.com/api/oauth2/authorize?client_id=794998843040858122&permissions=0&scope=bot"
+          role="button">Add to Discord</a>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <ul>
+      <li>&copy; <a href="/">gotiny.cc</a></li>
+      <li><a href="/api">API</a></li>
+      <li><a href="mailto:info@gotiny.cc">Contact</a></li>
+    </ul>
+  </footer>
+</body>
+
+</html>
