@@ -151,57 +151,74 @@ app.post('/apiLocal', async (req, res) => {
 // Generate new GoTiny Link
 app.post('/api', async (req, res) => {
 
-  // Check and filter URL
-  foundLinks = urlCheck(req.body.input)
-
-  if (foundLinks) {
-
-    const entries = []
-
-    foundLinks.forEach(long => {
-
-      // Get GoTiny Code
-      const code = getTiny(6)
-
-      // Create GoTiny entry
-      const newEntry = new GoTiny({
-        long,
-        code,
-        lastActive: null,
-        createdAt: Date.now(),
-        visited: 0
-      });
-
-      entries.push(newEntry)
-
-    })
-
-    // Save to database
-    GoTiny.insertMany(entries, (error, docs) => {
-
-      if (error) {
-        console.log(error)
-      } else {
-
-        const responseArray = []
-
-        docs.forEach(doc => {
-          responseArray.push({
-            long: doc.long,
-            code: doc.code
-          })
-        })
-
-        // Send response
-        res.send(responseArray)
-      }
-
-    })
-
-  } else {
+  // Send error if no input is found
+  if (!req.body.input) {
     res.send({
-      error: 'Error: No link found'
+      error: {
+        source: 'api',
+        code: 'missing-argument',
+        message: 'No key `input` provided',
+      }
     })
+  } else {
+
+    // Check and filter URL
+    foundLinks = urlCheck(req.body.input)
+
+    // Send error if no link is found
+    if (!foundLinks) {
+      res.send({
+        error: {
+          source: 'api',
+          code: 'no-link-found',
+          message: 'Could not find a link'
+        }
+      })
+    } else {
+
+      const entries = []
+
+      foundLinks.forEach(long => {
+
+        // Get GoTiny Code
+        const code = getTiny(6)
+
+        // Create GoTiny entry
+        const newEntry = new GoTiny({
+          long,
+          code,
+          lastActive: null,
+          createdAt: Date.now(),
+          visited: 0
+        });
+
+        entries.push(newEntry)
+
+      })
+
+      // Save to database
+      GoTiny.insertMany(entries, (error, docs) => {
+
+        if (error) {
+          console.log(error)
+        } else {
+
+          const responseArray = []
+
+          docs.forEach(doc => {
+            responseArray.push({
+              long: doc.long,
+              code: doc.code
+            })
+          })
+
+          // Send response
+          res.send(responseArray)
+        }
+
+      })
+
+    }
   }
 
 });
