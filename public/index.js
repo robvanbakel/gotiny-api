@@ -30,7 +30,7 @@ const GoTiny = {
       this.errorMessage = null;
       this.error = false;
 
-      const res = await fetch('/api', {
+      const res = await fetch('/apiLocal', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ long: this.userInput })

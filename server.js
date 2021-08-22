@@ -56,8 +56,32 @@ app.get('/:id', async (req, res) => {
 
 });
 
-// Generate new GoTiny Link
-app.post('/api', async (req, res) => {
+app.get('/api/:id', async (req, res) => {
+
+  const GoTinyObject = await GoTiny.findOne({ code: req.params.id });
+
+  if (GoTinyObject) {
+
+    res.send(GoTinyObject.long)
+
+    // Update Last Active and Visited
+    await GoTiny.updateOne(
+      { _id: GoTinyObject._id },
+      {
+        $set: { lastActive: Date.now() },
+        $inc: { visited: 1 }
+      }
+    )
+
+  }
+  else {
+    res.status(404)
+    res.send('GoTiny link not found')
+  }
+
+})
+
+app.post('/apiLocal', async (req, res) => {
 
   let { long } = req.body;
 
@@ -71,6 +95,8 @@ app.post('/api', async (req, res) => {
     long = urlCheck(long)
 
     if (long) {
+
+      long = long[0]
 
       // Get GoTiny Code
       const code = getTiny(6)
@@ -104,11 +130,7 @@ app.post('/api', async (req, res) => {
 
       } catch (err) {
 
-        if (err.errors.long.properties.message === 'Path `long` is required.') {
-          res.status(404).json({ error: "Key: 'long' not found!" })
-        } else {
-          res.status(404).json({ error: err._message })
-        }
+        res.status(404).json({ error: err._message })
 
       }
 
@@ -121,6 +143,65 @@ app.post('/api', async (req, res) => {
       addToNotion('<invalid>', req.body.long)
 
     };
+  }
+
+
+});
+
+// Generate new GoTiny Link
+app.post('/api', async (req, res) => {
+
+  // Check and filter URL
+  foundLinks = urlCheck(req.body.input)
+
+  if (foundLinks) {
+
+    const entries = []
+
+    foundLinks.forEach(long => {
+
+      // Get GoTiny Code
+      const code = getTiny(6)
+
+      // Create GoTiny entry
+      const newEntry = new GoTiny({
+        long,
+        code,
+        lastActive: null,
+        createdAt: Date.now(),
+        visited: 0
+      });
+
+      entries.push(newEntry)
+
+    })
+
+    // Save to database
+    GoTiny.insertMany(entries, (error, docs) => {
+
+      if (error) {
+        console.log(error)
+      } else {
+
+        const responseArray = []
+
+        docs.forEach(doc => {
+          responseArray.push({
+            long: doc.long,
+            code: doc.code
+          })
+        })
+
+        // Send response
+        res.send(responseArray)
+      }
+
+    })
+
+  } else {
+    res.send({
+      error: 'Error: No link found'
+    })
   }
 
 });
