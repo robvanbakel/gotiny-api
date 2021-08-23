@@ -27,48 +27,66 @@ const GoTiny = {
   methods: {
     async goTiny() {
 
+      // Reset all errors for new requrest
       this.errorMessage = null;
       this.error = false;
 
-      const res = await fetch('/apiLocal', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ long: this.userInput })
-      });
+      // Check if input field is not empty
+      if (!this.userInput) {
+        this.showError("Please paste in a long url")
+      } else {
 
-      if (res.status == 200) {
-        const link = await res.json();
-        this.output = link.tiny;
-        this.showOutput = true;
-
-        window.addEventListener('keydown', e => {
-
-          if (this.showOutput) {
-            switch (e.key) {
-              case 'c':
-                this.copyLink();
-                break;
-              case 'Enter':
-              case 'Escape':
-                this.closeOutput();
-                break;
-            }
-          }
+        // Send request to form handler
+        const res = await fetch('/apiLocal', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ long: this.userInput })
         });
 
-        this.userInput = '';
+        // If response is ok, display GoTiny link
+        if (res.status == 200) {
 
-      } else {
-        this.error = true;
-        setTimeout(() => this.error = false, 180);
-        this.changePlaceholder();
-        if (!this.userInput) {
-          this.errorMessage = "Please paste in a long url"
+          const tiny = await res.json();
+          this.outputLink(tiny)
+
+        // If response is bad, display and error
         } else {
-          this.errorMessage = "We're like 99% sure that's not a valid url"
+
+          this.showError("We're like 99% sure that's not a valid url")
+
         }
+
       }
 
+    },
+    showError(message) {
+
+      this.error = true;
+      setTimeout(() => this.error = false, 180);
+      this.changePlaceholder();
+      this.errorMessage = message
+
+    },
+    outputLink(link) {
+      this.output = link;
+      this.showOutput = true;
+
+      window.addEventListener('keydown', e => {
+
+        if (this.showOutput) {
+          switch (e.key) {
+            case 'c':
+              this.copyLink();
+              break;
+            case 'Enter':
+            case 'Escape':
+              this.closeOutput();
+              break;
+          }
+        }
+      });
+
+      this.userInput = '';
     },
     copyLink() {
 
@@ -97,7 +115,7 @@ const GoTiny = {
     }
   },
   mounted() {
-    this.$refs.userInput.focus();    
+    this.$refs.userInput.focus();
   }
 }
 

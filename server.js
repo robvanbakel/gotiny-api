@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const gotiny = require('gotiny')
 require('dotenv').config()
 
 const app = express();
@@ -83,68 +84,18 @@ app.get('/api/:id', async (req, res) => {
 
 app.post('/apiLocal', async (req, res) => {
 
-  let { long } = req.body;
+  try {
 
-  if (!long) {
+    // Get GoTiny link from API and send response to client
+    const goTinyObject = await gotiny.set(req.body.long)
+    res.send(JSON.stringify(goTinyObject[0].tiny))
 
-    res.status(404).json({ error: "Key: 'long' not found!" })
+  } catch (err) {
 
-  } else {
+    // If API returns an error, send response to client
+    res.status(400).send(err)
 
-    // Check and filter URL
-    long = urlCheck(long)
-
-    if (long) {
-
-      long = long[0]
-
-      // Get GoTiny Code
-      const code = getTiny(6)
-
-      // Create GoTiny entry
-      const newGoTiny = new GoTiny({
-        long,
-        code,
-        lastActive: null,
-        createdAt: Date.now(),
-        visited: 0
-      });
-
-      try {
-
-        // Save to Mongo DB
-        await newGoTiny.save()
-
-        // Save to Notion
-        addToNotion(code, long)
-
-        // Send Response
-        res.send({
-          long,
-          code,
-          tiny: `gotiny.cc/${code}`,
-          link: `https://gotiny.cc/${code}`
-        })
-
-        console.log(`${Date.now()}: Created ${code}`)
-
-      } catch (err) {
-
-        res.status(404).json({ error: err._message })
-
-      }
-
-    } else {
-      res.status(401).json('Invalid long url')
-
-      console.log(`${Date.now()}: Logged invalid entry`)
-
-      // Save to Notion
-      addToNotion('<invalid>', req.body.long)
-
-    };
   }
-
 
 });
 
