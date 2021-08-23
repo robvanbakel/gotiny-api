@@ -37,23 +37,20 @@ const GoTiny = {
       } else {
 
         // Send request to form handler
-        const res = await fetch('/apiLocal', {
+        const res = await fetch('https://gotiny.cc/api', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ long: this.userInput })
+          body: JSON.stringify({ input: this.userInput })
         });
 
-        // If response is ok, display GoTiny link
-        if (res.status == 200) {
+        // Read response from API
+        const data = await res.json();
 
-          const tiny = await res.json();
-          this.outputLink(tiny)
-
-        // If response is bad, display and error
-        } else {
-
+        // Output response from API
+        if (data.error) {
           this.showError("We're like 99% sure that's not a valid url")
-
+        } else {
+          this.outputLink(`gotiny.cc/${data[0].code}`)
         }
 
       }
