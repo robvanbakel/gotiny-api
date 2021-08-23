@@ -1,11 +1,9 @@
 const express = require('express');
 const cors = require('cors');
-const gotiny = require('gotiny')
 require('dotenv').config()
 
 const app = express();
 
-app.use(express.static(__dirname + '/public'));
 app.use(express.json());
 app.use(cors());
 
@@ -15,9 +13,6 @@ bot_discord();
 
 // Mongoose
 const GoTiny = require('./mongoose')
-
-// Notion
-const addToNotion = require('./notion')
 
 // Helpers
 const { getTiny, urlCheck } = require('./helpers')
@@ -52,7 +47,7 @@ app.get('/:id', async (req, res) => {
   }
   else {
     res.status(404)
-    res.sendFile(__dirname + '/public/404.html');
+    res.redirect('https://gotiny.cc/404.html?' + req.params.id);
   }
 
 });
@@ -81,23 +76,6 @@ app.get('/api/:id', async (req, res) => {
   }
 
 })
-
-app.post('/apiLocal', async (req, res) => {
-
-  try {
-
-    // Get GoTiny link from API and send response to client
-    const goTinyObject = await gotiny.set(req.body.long)
-    res.send(JSON.stringify(goTinyObject[0].tiny))
-
-  } catch (err) {
-
-    // If API returns an error, send response to client
-    res.status(400).send(err)
-
-  }
-
-});
 
 // Generate new GoTiny Link
 app.post('/api', async (req, res) => {
