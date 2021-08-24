@@ -7,10 +7,6 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Discord Bot
-const bot_discord = require('./bot_discord');
-bot_discord();
-
 // Mongoose
 const GoTiny = require('./mongoose')
 

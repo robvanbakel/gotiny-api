@@ -11,10 +11,7 @@
   "author": "Rob van Bakel",
   "license": "ISC",
   "dependencies": {
-    "@notionhq/client": "^0.3.0",
-    "axios": "^0.21.1",
     "cors": "^2.8.5",
-    "discord.js": "^12.5.1",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "gotiny": "^1.1.0",
