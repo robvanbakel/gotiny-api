@@ -35,7 +35,7 @@ fetch('https://gotiny.cc/api', {
 
 #### JavaScript SDK
 
-JavaScript developers might want to consider using the [GoTiny SDK](https://github.com/robvanbakel/gotiny-sdk). The SDK provides extra features like improved error-handling and extended return objects.
+JavaScript developers might want to consider using the [GoTiny SDK](https://www.npmjs.com/package/gotiny). The SDK provides extra features like improved error-handling and extended return objects.
 
 ## Example Response
 
