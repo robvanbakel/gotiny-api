@@ -2,14 +2,25 @@
   "name": "gotiny",
   "version": "1.0.0",
   "description": "GoTiny is a lightweight link shortener API",
-  "repository": ".git",
   "main": "server.js",
   "scripts": {
     "start": "node server",
     "dev": "nodemon server"
   },
-  "author": "Rob van Bakel",
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robvanbakel/gotiny-api.git"
+  },
+  "author": {
+    "name" : "Rob van Bakel",
+    "email" : "robbakel@gmail.com",
+    "url" : "https://robvanbakel.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/robvanbakel/gotiny-api/issues"
+  },
+  "homepage": "https://github.com/robvanbakel/gotiny-api#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
