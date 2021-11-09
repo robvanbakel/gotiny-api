@@ -1,31 +1,29 @@
-const express = require('express');
-const cors = require('cors');
-require('dotenv').config()
+const express = require("express")
+const cors = require("cors")
+require("dotenv").config()
 
-const app = express();
+const app = express()
 
-app.use(express.json());
-app.use(cors());
+app.use(express.json())
+app.use(cors())
 
 // Mongoose
-const GoTiny = require('./mongoose')
+const GoTiny = require("./mongoose")
 
 // Helpers
-const { getTiny, urlCheck } = require('./helpers')
+const { getTiny, urlCheck } = require("./helpers")
 
 // Redirect GoTiny to URL
-app.get('/:id', async (req, res) => {
-
+app.get("/:id", async (req, res) => {
   // Get GoTiny Object from MongoDB
-  const GoTinyObject = await GoTiny.findOne({ code: req.params.id });
+  const GoTinyObject = await GoTiny.findOne({ code: req.params.id })
 
   if (GoTinyObject) {
-
     // Optionally prepend with 'http://'
-    let prepend = '';
+    let prepend = ""
 
-    if (GoTinyObject.long.substring(0, 4) !== 'http') {
-      prepend = 'http://'
+    if (GoTinyObject.long.substring(0, 4) !== "http") {
+      prepend = "http://"
     }
 
     // Redirect to Full URL
@@ -36,24 +34,19 @@ app.get('/:id', async (req, res) => {
       { _id: GoTinyObject._id },
       {
         $set: { lastActive: Date.now() },
-        $inc: { visited: 1 }
+        $inc: { visited: 1 },
       }
     )
-
-  }
-  else {
+  } else {
     res.status(404)
-    res.redirect('https://gotiny.cc/404.html?' + req.params.id);
+    res.redirect("https://gotiny.cc/404.html?" + req.params.id)
   }
+})
 
-});
-
-app.get('/api/:id', async (req, res) => {
-
-  const GoTinyObject = await GoTiny.findOne({ code: req.params.id });
+app.get("/api/:id", async (req, res) => {
+  const GoTinyObject = await GoTiny.findOne({ code: req.params.id })
 
   if (GoTinyObject) {
-
     res.send(GoTinyObject.long)
 
     // Update Last Active and Visited
@@ -61,32 +54,27 @@ app.get('/api/:id', async (req, res) => {
       { _id: GoTinyObject._id },
       {
         $set: { lastActive: Date.now() },
-        $inc: { visited: 1 }
+        $inc: { visited: 1 },
       }
     )
-
-  }
-  else {
+  } else {
     res.status(404)
-    res.send('GoTiny link not found')
+    res.send("GoTiny link not found")
   }
-
 })
 
 // Generate new GoTiny Link
-app.post('/api', async (req, res) => {
-
+app.post("/api", async (req, res) => {
   // Send error if no input is found
   if (!req.body.input) {
     res.send({
       error: {
-        source: 'api',
-        code: 'missing-argument',
-        message: 'No key `input` provided',
-      }
+        source: "api",
+        code: "missing-argument",
+        message: "No key `input` provided",
+      },
     })
   } else {
-
     // Check and filter URL
     foundLinks = urlCheck(req.body.input)
 
@@ -94,59 +82,68 @@ app.post('/api', async (req, res) => {
     if (!foundLinks) {
       res.send({
         error: {
-          source: 'api',
-          code: 'no-link-found',
-          message: 'Could not find a link'
-        }
+          source: "api",
+          code: "no-link-found",
+          message: "Could not find a link",
+        },
       })
     } else {
+      const customCodeRegex = /^[a-z0-9_-]{4,32}$/
+      const custom = req.body.custom?.split(" ")
 
       const entries = []
 
-      foundLinks.forEach(long => {
-
+      for (const index in foundLinks) {
         // Get GoTiny Code
-        const code = getTiny(6)
+        let code = getTiny(6)
+
+        if (custom && custom[index]) {
+          // Validate custom code
+          let customCode = custom[index].toLowerCase()
+
+          if (customCodeRegex.test(customCode)) {
+            // Check if custom code is already taken
+            const codeTaken = await GoTiny.findOne({ code: customCode })
+
+            if (!codeTaken) {
+              code = customCode
+            }
+          }
+        }
 
         // Create GoTiny entry
         const newEntry = new GoTiny({
-          long,
+          long: foundLinks[index],
           code,
           lastActive: null,
           createdAt: Date.now(),
-          visited: 0
-        });
+          visited: 0,
+        })
 
         entries.push(newEntry)
-
-      })
+      }
 
       // Save to database
       GoTiny.insertMany(entries, (error, docs) => {
-
         if (error) {
           console.log(error)
         } else {
-
           const responseArray = []
 
-          docs.forEach(doc => {
+          docs.forEach((doc) => {
             responseArray.push({
               long: doc.long,
-              code: doc.code
+              code: doc.code,
             })
           })
 
           // Send response
           res.send(responseArray)
         }
-
       })
-
     }
   }
-
-});
+})
 
 // Start Server
-app.listen(process.env.PORT, () => console.log(`GoTiny running on port ${process.env.PORT}`));
+app.listen(process.env.PORT, () => console.log(`GoTiny running on port ${process.env.PORT}`))
