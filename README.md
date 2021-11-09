@@ -8,13 +8,15 @@ It also filters the url out of any string that a user enters. This way, develope
 
 The GoTiny API lets you quickly obtain a short code that's used to redirect to an URL specified by the user.
 
-| Method | Endpoint                | Format | Parameter |
-|:------ | :---------------------- |:------ |:--------- |
-| POST   | `https://gotiny.cc/api` | JSON   | `input`   |
+| Method | Endpoint                | Format | Parameters                   |
+| :----- | :---------------------- | :----- | :--------------------------- |
+| POST   | `https://gotiny.cc/api` | JSON   | `input`, `custom` (optional) |
 
-To use the GoTiny API, make a POST request to the endpoint `https://gotiny.cc/api`. The body of your request should be in JSON format with a property name of `input`. This key should have a value of the URL you want to shorten or a string that contains that URL. 
+To use the GoTiny API, make a POST request to the endpoint `https://gotiny.cc/api`. The body of your request should be in JSON format with a property name of `input`. This key should have a value of the URL you want to shorten or a string that contains that URL.
 
-The response will be formatted as JSON and will contain the long URL that was shortened and a 6-digit code. This code will be used as an identifier to redirect to the long URL.
+Optionally, you can provide a `custom` key. The value of this key will be used as the GoTiny code for the generated link. Custom codes should consist of 4-32 lowercase letters, numbers, hyphen and/or underscore symbols.
+
+The response will be formatted as JSON and will contain the long URL that was shortened, a randomly generated 6-digit code or custom code, if provided. This code will be used as an identifier to redirect to the long URL.
 
 ## Example Request
 
@@ -25,11 +27,12 @@ curl -X POST https://gotiny.cc/api -H "Content-Type: application/json" -d '{ "in
 ```
 
 ###### JavaScript
+
 ```javascript
-fetch('https://gotiny.cc/api', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ "input" : "https://amazon.com/very-long-url" })
+fetch("https://gotiny.cc/api", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ input: "https://amazon.com/very-long-url" }),
 })
 ```
 
