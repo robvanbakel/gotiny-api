@@ -11,6 +11,10 @@ const goTinySchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  customCode: {
+    type: Boolean,
+    required: false
+  },
   lastActive: {
     type: Number,
     required: false

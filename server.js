@@ -93,6 +93,8 @@ app.post("/api", async (req, res) => {
 
       const entries = []
 
+      let useCustomCode = false
+
       for (const index in foundLinks) {
         // Get GoTiny Code
         let code = getTiny(6)
@@ -107,6 +109,7 @@ app.post("/api", async (req, res) => {
 
             if (!codeTaken) {
               code = customCode
+              useCustomCode = true
             }
           }
         }
@@ -115,6 +118,7 @@ app.post("/api", async (req, res) => {
         const newEntry = new GoTiny({
           long: foundLinks[index],
           code,
+          customCode: useCustomCode,
           lastActive: null,
           createdAt: Date.now(),
           visited: 0,
