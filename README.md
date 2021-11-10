@@ -14,7 +14,7 @@ The GoTiny API lets you quickly obtain a short code that's used to redirect to a
 
 To use the GoTiny API, make a POST request to the endpoint `https://gotiny.cc/api`. The body of your request should be in JSON format with a property name of `input`. This key should have a value of the URL you want to shorten or a string that contains that URL.
 
-Optionally, you can provide a `custom` key. The value of this key will be used as the GoTiny code for the generated link. Custom codes should consist of 4-32 lowercase letters, numbers, hyphen and/or underscore symbols.
+Optionally, you can provide a `custom` key. The value of this key will be used as the GoTiny code for the generated link. Custom codes should consist of 4-32 lowercase letters, numbers, hyphen and/or underscore symbols. When a custom code does not meet these requirements, or when a custom code is already being used, the API will automatically use a randomly generated fallback code. If you want the API to not continue when not being able to use your custom code, set the request's `useFallback` parameter to `false`.
 
 The response will be formatted as JSON and will contain the long URL that was shortened, a randomly generated 6-digit code or custom code, if provided. This code will be used as an identifier to redirect to the long URL.
 

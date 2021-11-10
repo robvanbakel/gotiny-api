@@ -103,9 +103,33 @@ app.post("/api", async (req, res) => {
           // Validate custom code
           let customCode = custom[index].toLowerCase()
 
-          if (customCodeRegex.test(customCode)) {
+          if (!customCodeRegex.test(customCode)) {
+            if (req.body.useFallback === false) {
+              res.send({
+                error: {
+                  source: "api",
+                  code: "custom-code-invalid",
+                  message: `Custom code does not meet requirements: ${customCodeRegex}`,
+                },
+              })
+
+              return
+            }
+          } else {
             // Check if custom code is already taken
             const codeTaken = await GoTiny.findOne({ code: customCode })
+
+            if (codeTaken && req.body.useFallback === false) {
+              res.send({
+                error: {
+                  source: "api",
+                  code: "custom-code-taken",
+                  message: `Custom code already taken: ${customCode}`,
+                },
+              })
+
+              return
+            }
 
             if (!codeTaken) {
               code = customCode
