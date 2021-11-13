@@ -103,7 +103,21 @@ app.post("/api", async (req, res) => {
           // Validate custom code
           let customCode = custom[index].toLowerCase()
 
-          if (!customCodeRegex.test(customCode)) {
+          if (/(\-\-)|(__)/.test(customCode)) {
+            if (req.body.useFallback === false) {
+              res.send({
+                error: {
+                  source: "api",
+                  code: "custom-code-invalid",
+                  message: `Custom codes can not have two of the same symbols together`,
+                },
+              })
+
+              return
+            }
+          }
+
+          if (!customCodeRegex.test(customCode) || /(\-\-)|(__)/.test(customCode)) {
             if (req.body.useFallback === false) {
               res.send({
                 error: {
