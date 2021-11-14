@@ -8,9 +8,9 @@ It also filters the url out of any string that a user enters. This way, develope
 
 The GoTiny API lets you quickly obtain a short code that's used to redirect to an URL specified by the user.
 
-| Method | Endpoint                | Format | Parameters                   |
-| :----- | :---------------------- | :----- | :--------------------------- |
-| POST   | `https://gotiny.cc/api` | JSON   | `input`, `custom` (optional) |
+| Method | Endpoint                | Format | Parameters                                            |
+| :----- | :---------------------- | :----- | :---------------------------------------------------- |
+| POST   | `https://gotiny.cc/api` | JSON   | `input`, `custom` (optional),`useFallback` (optional) |
 
 To use the GoTiny API, make a POST request to the endpoint `https://gotiny.cc/api`. The body of your request should be in JSON format with a property name of `input`. This key should have a value of the URL you want to shorten or a string that contains that URL.
 
