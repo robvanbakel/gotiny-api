@@ -76,7 +76,11 @@ app.post("/api", async (req, res) => {
     })
   } else {
     // Check and filter URL
-    foundLinks = urlCheck(req.body.input)
+    if (typeof req.body.input !== "string") {
+      foundLinks = urlCheck(req.body.input.join(" "))
+    } else {
+      foundLinks = urlCheck(req.body.input)
+    }
 
     // Send error if no link is found
     if (!foundLinks) {
