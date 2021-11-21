@@ -1,3 +1,13 @@
+const constructError = (code, message) => {
+  return {
+    error: {
+      source: "api",
+      code,
+      message,
+    },
+  }
+}
+
 // List of allowed characters
 const chars = ['a', 'b', 'c', 'd', 'e', 'f', 'h', 'k', 'm', 'n', 'p', 'r', 's', 't', 'w', 'x', 'y', 'z', '2', '3', '4', '5', '6', '7', '8']
 
@@ -25,4 +35,4 @@ const urlCheck = str => {
   
 }
 
-module.exports = {getTiny, urlCheck}
+module.exports = {constructError, getTiny, urlCheck}
