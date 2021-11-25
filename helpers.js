@@ -31,7 +31,7 @@ const urlCheck = str => {
 
     const matches = str.match(regex)
 
-   return matches
+   return matches || []
   
 }
 
