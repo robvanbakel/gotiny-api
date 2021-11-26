@@ -12,9 +12,9 @@
     "url": "git+https://github.com/robvanbakel/gotiny-api.git"
   },
   "author": {
-    "name" : "Rob van Bakel",
-    "email" : "robbakel@gmail.com",
-    "url" : "https://robvanbakel.com"
+    "name": "Rob van Bakel",
+    "email": "robbakel@gmail.com",
+    "url": "https://robvanbakel.com"
   },
   "license": "MIT",
   "bugs": {
@@ -25,7 +25,6 @@
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "gotiny": "^1.1.0",
     "mongoose": "^5.11.9"
   },
   "devDependencies": {
