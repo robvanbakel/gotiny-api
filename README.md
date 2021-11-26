@@ -4,21 +4,25 @@ GoTiny is a link shortener API that's built with a failproof user experience as 
 
 It also filters the url out of any string that a user enters. This way, developers using the API don't have to provide a clean link, but can just feed an entire paragraph into GoTiny. The API will find the url and return a short link.
 
+## Table of Contents
+
+- [Usage](#usage)
+- [Options](#options)
+- [JavaScript SDK](#javascript-sdk)
+
 ## Usage
 
 The GoTiny API lets you quickly obtain a short code that's used to redirect to an URL specified by the user.
 
-| Method | Endpoint                | Format | Parameters                                            |
-| :----- | :---------------------- | :----- | :---------------------------------------------------- |
-| POST   | `https://gotiny.cc/api` | JSON   | `input`, `custom` (optional),`useFallback` (optional) |
+| Method | Endpoint                | Format | Parameters                               |
+| :----- | :---------------------- | :----- | :--------------------------------------- |
+| POST   | `https://gotiny.cc/api` | JSON   | `input`, {`long`,`custom`,`useFallback`} |
 
-To use the GoTiny API, make a POST request to the endpoint `https://gotiny.cc/api`. The body of your request should be in JSON format with a property name of `input`. This key should have a value of the URL you want to shorten or a string that contains that URL. To shorten multiple links at once, you can pass in an array with links.
+To use the GoTiny API, make a POST request to the endpoint `https://gotiny.cc/api`. The body of your request should be in JSON format with a property name of `input`. This key should have a value of the URL you want to shorten or a string that contains that URL. When multiple URLs are found in the provided string, short links will be generated for all of them.
 
-Optionally, you can provide a `custom` key. The value of this key will be used as the GoTiny code for the generated link. Custom codes should consist of 4-32 lowercase letters, numbers, hyphen and/or underscore symbols. When a custom code does not meet these requirements, or when a custom code is already being used, the API will automatically use a randomly generated fallback code. If you want the API to not continue when not being able to use your custom code, set the request's `useFallback` parameter to `false`.
+The response will be formatted as JSON and contain the long URL that was shortened and a randomly generated 6-character long code, if provided. This code will be used as an identifier to redirect to the long URL.
 
-The response will be formatted as JSON and will contain the long URL that was shortened, a randomly generated 6-digit code or custom code, if provided. This code will be used as an identifier to redirect to the long URL.
-
-## Example Request
+### Example Request
 
 ###### curl
 
@@ -36,11 +40,7 @@ fetch("https://gotiny.cc/api", {
 })
 ```
 
-#### JavaScript SDK
-
-JavaScript developers might want to consider using the [GoTiny SDK](https://www.npmjs.com/package/gotiny). The SDK provides extra features like improved error-handling and extended return objects.
-
-## Example Response
+### Example Response
 
 ```json
 {
@@ -50,6 +50,35 @@ JavaScript developers might want to consider using the [GoTiny SDK](https://www.
 ```
 
 When `gotiny.cc/y68hxc` is visited, the visitor will be redirected to `https://amazon.com/very-long-url`.
+
+## Options
+
+Options are provided by sending an object in the request body. The object should have a `long` key with the long link as a value, as wel as any of the supported options. Options currently supported are:
+
+| Key           | Type    | Description                                                                                                                                         |
+| :------------ | :------ | :-------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `custom`      | string  | Generates a custom link (e.g. `gotiny.cc/custom-link`). Custom codes should consist of 4-32 lowercase letters, numbers, `-` and/or `_` symbols.     |
+| `useFallback` | boolean | Set to `false` if you don't want to use a randomly generated 6-character fallback code and throw an error instead when a custom code can't be used. |
+
+To generate multiple links at once, you can pass an array of objects into the request body.
+
+### Example Request
+
+```javascript
+fetch("https://gotiny.cc/api", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    long: "https://amazon.com/very-long-url",
+    custom: "amazon", // generate gotiny.cc/amazon
+    useFallback: false, // don't use randomly generated code when "amazon" can't be used
+  }),
+})
+```
+
+## JavaScript SDK
+
+JavaScript developers might want to consider using the [GoTiny SDK](https://www.npmjs.com/package/gotiny). The SDK provides extra features like improved error-handling and extended return objects.
 
 #### Built With
 
