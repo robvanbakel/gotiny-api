@@ -26,6 +26,11 @@ module.exports = async (req, res, next) => {
     )
   } else {
     res.status(404)
-    res.redirect("https://gotiny.cc/404.html?" + req.params.id)
+
+    const baseURL = new URL('https://gotiny.cc')
+    const errorPage = new URL('404.html', baseURL)
+    errorPage.searchParams.set('code', req.params.id)
+    
+    res.redirect(errorPage)
   }
 }
