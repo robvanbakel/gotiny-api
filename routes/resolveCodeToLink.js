@@ -5,7 +5,14 @@ module.exports = async (req, res, next) => {
   const GoTinyObject = await GoTiny.findOne({ code: req.params.id })
 
   if (GoTinyObject) {
-    res.send(GoTinyObject.long)
+    if (req.query.format === 'json') {
+      res.json({
+        code: GoTinyObject.code, 
+        long: GoTinyObject.long,
+      })
+    } else {
+      res.send(GoTinyObject.long)
+    }
 
     // Update Last Active and Visited
     await GoTiny.updateOne(
