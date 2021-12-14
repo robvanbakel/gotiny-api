@@ -67,7 +67,7 @@ To generate multiple links at once, you can pass an array of objects into the re
 ###### curl
 
 ```bash
-curl -X POST https://gotiny.cc/api -H "Content-Type: application/json" -d '{ "long" : "https://amazon.com/very-long-url", "custom": "amazon", "useFallback": false }'
+curl -X POST https://gotiny.cc/api -H "Content-Type: application/json" -d '{ "long": "https://amazon.com/very-long-url", "custom": "amazon", "useFallback": false }'
 ```
 
 ###### JavaScript
@@ -82,6 +82,15 @@ fetch("https://gotiny.cc/api", {
     useFallback: false, // don't use randomly generated code when "amazon" can't be used
   }),
 })
+```
+
+### Example Response
+
+```json
+{
+  "long": "https://amazon.com/very-long-url",
+  "code": "amazon"
+}
 ```
 
 ## JavaScript SDK
