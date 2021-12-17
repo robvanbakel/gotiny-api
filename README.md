@@ -109,3 +109,5 @@ JavaScript developers might want to consider using the [GoTiny SDK](https://www.
 - [robvanbakel/gotiny-sdk](https://github.com/robvanbakel/gotiny-sdk)
 - [robvanbakel/gotiny-website](https://github.com/robvanbakel/gotiny-website)
 - [robvanbakel/gotiny-discord-bot](https://github.com/robvanbakel/gotiny-discord-bot)
+- [robvanbakel/gotiny-slack-bot](https://github.com/robvanbakel/gotiny-slack-bot)
+
