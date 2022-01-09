@@ -7,10 +7,14 @@ It also filters the url out of any string that a user enters. This way, develope
 ## Table of Contents
 
 - [Usage](#usage)
-- [Options](#options)
+  - [Create GoTiny link](#create-gotiny-link)
+    - [Options](#options)
+  - [Resolve GoTiny link](#resolve-gotiny-link)
 - [JavaScript SDK](#javascript-sdk)
 
 ## Usage
+
+### Create GoTiny link
 
 The GoTiny API lets you quickly obtain a short code that's used to redirect to an URL specified by the user.
 
@@ -51,7 +55,7 @@ fetch("https://gotiny.cc/api", {
 
 When `gotiny.cc/y68hxc` is visited, the visitor will be redirected to `https://amazon.com/very-long-url`.
 
-## Options
+### Options
 
 Options are provided by sending an object in the request body. The object should have a `long` key with the long link as a value, as wel as any of the supported options. Options currently supported are:
 
@@ -70,27 +74,24 @@ To generate multiple links at once, you can pass an array of objects into the re
 curl -X POST https://gotiny.cc/api -H "Content-Type: application/json" -d '{ "long": "https://amazon.com/very-long-url", "custom": "amazon", "useFallback": false }'
 ```
 
+### Resolve GoTiny link
+
+You can get the long URL that corresponds with a GoTiny link by making a GET request to `https://gotiny.cc/api/<code>`. The long URL will be returned in plain text.
+
+### Example Request
+
+###### curl
+
+```bash
+curl https://gotiny.cc/api/y68hxc
+```
+
 ###### JavaScript
 
 ```javascript
-fetch("https://gotiny.cc/api", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    long: "https://amazon.com/very-long-url",
-    custom: "amazon", // generate gotiny.cc/amazon
-    useFallback: false, // don't use randomly generated code when "amazon" can't be used
-  }),
-})
-```
-
-### Example Response
-
-```json
-{
-  "long": "https://amazon.com/very-long-url",
-  "code": "amazon"
-}
+fetch('https://gotiny.cc/api/y68hxc')
+  .then((res) => res.text())
+  .then((data) => console.log(data))
 ```
 
 ## JavaScript SDK
