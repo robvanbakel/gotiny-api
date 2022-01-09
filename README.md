@@ -94,6 +94,8 @@ fetch('https://gotiny.cc/api/y68hxc')
   .then((data) => console.log(data))
 ```
 
+You can add the query parameter `?format=json` to this call to be returned the full link as a JSON formatted object.
+
 ## JavaScript SDK
 
 JavaScript developers might want to consider using the [GoTiny SDK](https://www.npmjs.com/package/gotiny). The SDK provides extra features like improved error-handling and extended return objects.
