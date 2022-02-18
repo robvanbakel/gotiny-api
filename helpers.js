@@ -22,17 +22,14 @@ const getTiny = len => {
 
 // Check for valid URL
 const urlCheck = str => {
-  const regex = new RegExp('(https?:\\/\\/)?' + // protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-    '(\\#[-a-z\\d_]*)?', 'gi'); // fragment locator
+  const regex = new RegExp(
+    '(http(s)?:\\/\\/.)?[-a-z0-9@:%._\\+~#=]{1,2048}\\.[a-z]{2,24}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)',
+    'gi'
+  )
 
-    const matches = str.match(regex)
+  const matches = str.match(regex)
 
-   return matches || []
-  
+  return matches || []
 }
 
 module.exports = {constructError, getTiny, urlCheck}
