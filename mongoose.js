@@ -1,34 +1,34 @@
 const mongoose = require('mongoose')
 
-mongoose.connect(process.env.MONGO_DB, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.MONGO_DB, { useNewUrlParser: true, useUnifiedTopology: true })
 
 const goTinySchema = new mongoose.Schema({
   long: {
     type: String,
-    required: true
+    required: true,
   },
   code: {
     type: String,
-    required: true
+    required: true,
   },
   customCode: {
     type: Boolean,
-    required: false
+    required: false,
   },
   lastActive: {
     type: Number,
-    required: false
+    required: false,
   },
   createdAt: {
     type: Number,
-    required: true
+    required: true,
   },
   visited: {
     type: Number,
-    required: true
-  }
+    required: true,
+  },
 }, { versionKey: false })
 
-const GoTiny = mongoose.model("GoTiny", goTinySchema, 'gotiny')
+const GoTiny = mongoose.model('GoTiny', goTinySchema, 'gotiny')
 
 module.exports = GoTiny

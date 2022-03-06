@@ -1,8 +1,8 @@
 // Import Mongoose
-const GoTiny = require("../mongoose")
+const GoTiny = require('../mongoose')
 
 // Import Helper functions
-const { constructError, getTiny, urlCheck } = require("../helpers")
+const { constructError, getTiny, urlCheck } = require('../helpers')
 
 module.exports = async (req, res) => {
   const staged = []
@@ -34,12 +34,14 @@ module.exports = async (req, res) => {
     })
   } else {
     // Send error if no input is provided
-    return res.send(constructError("missing-argument", "No input provided"))
+    res.send(constructError('missing-argument', 'No input provided'))
+    return
   }
 
   // Send error if no valid links are staged
   if (!staged.map((obj) => obj.long).some((long) => !!long === true)) {
-    return res.send(constructError("no-link-found", "Could not find a link"))
+    res.send(constructError('no-link-found', 'Could not find a link'))
+    return
   }
 
   // Send error if duplicate custom codes are found
@@ -49,89 +51,85 @@ module.exports = async (req, res) => {
     .filter((code) => !!code === true)
 
   if (duplicatesArray.length) {
-    return res.send(
+    res.send(
       constructError(
-        "duplicate-custom-codes",
-        `The following custom codes are being used multiple times: ${duplicatesArray}`
-      )
+        'duplicate-custom-codes',
+        `The following custom codes are being used multiple times: ${duplicatesArray}`,
+      ),
     )
+    return
   }
 
   const customCodeRegex = /^[a-z0-9_-]+$/
 
-  for (const entry of staged) {
-    // Verify custom code
-    if (entry.custom) {
-      entry.custom = entry.custom.toLowerCase()
+  // Verify custom code
+  if (staged[0].custom) {
+    staged[0].custom = staged[0].custom.toLowerCase()
 
-      // Send error if custom code is less than 4 characters long
-      if (entry.custom?.length < 4) {
-        if (entry.useFallback === false) {
-          return res.send(constructError("custom-code-invalid", `Custom code too short: ${entry.custom}`))
-        } else {
-          entry.custom = null
-        }
+    // Send error if custom code is less than 4 characters long
+    if (staged[0].custom?.length < 4) {
+      if (staged[0].useFallback === false) {
+        res.send(constructError('custom-code-invalid', 'Custom code too short'))
+        return
       }
+      staged[0].custom = null
+    }
 
-      // Send error if custom code is more than 32 characters long
-      if (entry.custom?.length > 32) {
-        if (entry.useFallback === false) {
-          return res.send(constructError("custom-code-invalid", `Custom code too long: ${entry.custom}`))
-        } else {
-          entry.custom = null
-        }
+    // Send error if custom code is more than 32 characters long
+    if (staged[0].custom?.length > 32) {
+      if (staged[0].useFallback === false) {
+        res.send(constructError('custom-code-invalid', 'Custom code too long'))
+        return
       }
+      staged[0].custom = null
+    }
 
-      // Send error if two of the same symbols are next to each other
-      if (/(\-\-)|(__)/.test(entry.custom)) {
-        if (entry.useFallback === false) {
-          return res.send(
-            constructError("custom-code-invalid", `Custom code has two of the same symbols together: ${entry.custom}`)
-          )
-        } else {
-          entry.custom = null
-        }
+    // Send error if two of the same symbols are next to each other
+    if (/(--)|(__)/.test(staged[0].custom)) {
+      if (staged[0].useFallback === false) {
+        res.send(
+          constructError('custom-code-invalid', 'Custom code has two of the same symbols together'),
+        )
+        return
       }
+      staged[0].custom = null
+    }
 
-      // Send error if custom code contains restricted characters
-      if (!customCodeRegex.test(entry.custom)) {
-        if (entry.useFallback === false) {
-          return res.send(
-            constructError(
-              "custom-code-invalid",
-              `Custom code does not only contain lowercase letters, numbers and - or _ symbols: ${entry.custom}`
-            )
-          )
-        } else {
-          entry.custom = null
-        }
+    // Send error if custom code contains restricted characters
+    if (!customCodeRegex.test(staged[0].custom)) {
+      if (staged[0].useFallback === false) {
+        res.send(
+          constructError(
+            'custom-code-invalid',
+            'Custom code does not only contain lowercase letters, numbers and - or _ symbols.',
+          ),
+        )
+        return
       }
+      staged[0].custom = null
+    }
 
-      // Check if custom code is already taken
-      const codeTaken = await GoTiny.findOne({ code: entry.custom })
+    // Check if custom code is already taken
+    const codeTaken = await GoTiny.findOne({ code: staged[0].custom })
 
-      if (codeTaken) {
-        if (entry.useFallback === false) {
-          return res.send(constructError("custom-code-taken", `Custom code already taken: ${entry.custom}`))
-        } else {
-          entry.custom = null
-        }
+    if (codeTaken) {
+      if (staged[0].useFallback === false) {
+        res.send(constructError('custom-code-taken', `Custom code already taken: ${staged[0].custom}`))
+        return
       }
+      staged[0].custom = null
     }
   }
 
   // Save to database
-
-  const entries = staged.map((entry) => {
-    return new GoTiny({
-      long: entry.long,
-      code: entry.custom || getTiny(6),
-      customCode: !!entry.custom,
-      lastActive: null,
-      createdAt: Date.now(),
-      visited: 0,
-    })
-  })
+  const entries = staged.map((entry) => new GoTiny({
+    long: entry.long,
+    code: entry.custom || getTiny(6),
+    customCode: !!entry.custom,
+    lastActive: null,
+    createdAt: Date.now(),
+    visited: 0,
+  }))
 
   GoTiny.insertMany(entries, (error, docs) => {
     if (error) {
