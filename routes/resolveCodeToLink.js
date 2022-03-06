@@ -1,3 +1,5 @@
+const { constructError } = require("../helpers")
+
 // Import Mongoose
 const GoTiny = require("../mongoose")
 
@@ -24,6 +26,6 @@ module.exports = async (req, res, next) => {
     )
   } else {
     res.status(404)
-    res.send("GoTiny link not found")
+    return res.send(constructError("no-matches", "GoTiny link not found"))
   }
 }
