@@ -15,7 +15,7 @@ const chars = ['a', 'b', 'c', 'd', 'e', 'f', 'h', 'k', 'm', 'n', 'p', 'r', 's', 
 const getTiny = len => {
   let id = '';
   for (let i = 0; i < len; i++) {
-    id = id.concat(chars[Math.floor(Math.random() * chars.length)])
+    id += chars[Math.floor(Math.random() * chars.length)]
   }
   return id;
 }
@@ -32,4 +32,4 @@ const urlCheck = str => {
   return matches || []
 }
 
-module.exports = {constructError, getTiny, urlCheck}
+module.exports = { constructError, getTiny, urlCheck }
