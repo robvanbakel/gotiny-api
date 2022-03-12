@@ -1,19 +1,19 @@
-const { constructError } = require('../helpers')
+const { constructError } = require('../helpers');
 
 // Import Mongoose
-const GoTiny = require('../mongoose')
+const GoTiny = require('../mongoose');
 
 module.exports = async (req, res) => {
-  const GoTinyObject = await GoTiny.findOne({ code: req.params.id })
+  const GoTinyObject = await GoTiny.findOne({ code: req.params.id });
 
   if (GoTinyObject) {
     if (req.query.format === 'json') {
       res.json({
         code: GoTinyObject.code,
         long: GoTinyObject.long,
-      })
+      });
     } else {
-      res.send(GoTinyObject.long)
+      res.send(GoTinyObject.long);
     }
 
     // Update Last Active and Visited
@@ -23,9 +23,9 @@ module.exports = async (req, res) => {
         $set: { lastActive: Date.now() },
         $inc: { visited: 1 },
       },
-    )
+    );
   }
 
-  res.status(404)
-  return res.send(constructError('no-matches', 'GoTiny link not found'))
-}
+  res.status(404);
+  return res.send(constructError('no-matches', 'GoTiny link not found'));
+};

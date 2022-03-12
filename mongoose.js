@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
-mongoose.connect(process.env.MONGO_DB, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGO_DB, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const goTinySchema = new mongoose.Schema({
   long: {
@@ -27,8 +27,8 @@ const goTinySchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-}, { versionKey: false })
+}, { versionKey: false });
 
-const GoTiny = mongoose.model('GoTiny', goTinySchema, 'gotiny')
+const GoTiny = mongoose.model('GoTiny', goTinySchema, 'gotiny');
 
-module.exports = GoTiny
+module.exports = GoTiny;

@@ -6,8 +6,7 @@ module.exports = {
     ecmaVersion: 'latest',
   },
   rules: {
-    semi: [1, 'never'],
     'no-console': 'off',
     'no-underscore-dangle': ['error', { allow: ['_id', 'another'] }],
   },
-}
+};
