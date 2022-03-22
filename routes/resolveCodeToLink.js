@@ -24,8 +24,7 @@ module.exports = async (req, res) => {
         $inc: { visited: 1 },
       },
     );
+  } else {
+    res.status(404).send(constructError('no-matches', 'GoTiny link not found'));
   }
-
-  res.status(404);
-  return res.send(constructError('no-matches', 'GoTiny link not found'));
 };
