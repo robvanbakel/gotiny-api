@@ -24,11 +24,13 @@
   },
   "homepage": "https://github.com/robvanbakel/gotiny-api#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "mongoose": "^6.6.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
     "eslint": "^8.10.0",
     "eslint-config-airbnb-base": "^15.0.0",
