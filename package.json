@@ -2,10 +2,11 @@
   "name": "gotiny",
   "version": "1.4.0",
   "description": "GoTiny is a lightweight link shortener API",
-  "main": "server.js",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "node server",
-    "dev": "nodemon server",
+    "build": "tsc",
+    "start": "node dist",
+    "dev": "nodemon dist",
     "lint": "eslint ."
   },
   "repository": {
