@@ -1,4 +1,4 @@
-> **GoTiny is temporarily unavailable**
+> **GoTiny is temporarily partially unavailable**
 > 
 > More info here: [GoTiny is under security review](https://github.com/robvanbakel/gotiny-api/issues/6#issue-1421501653)
 
