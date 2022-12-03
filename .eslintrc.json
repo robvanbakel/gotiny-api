@@ -12,6 +12,7 @@
     "sourceType": "module"
   },
   "plugins": ["@typescript-eslint"],
+  "ignorePatterns": ["dist"],
   "rules": {
     "no-console": 0,
     "no-underscore-dangle": [2, { "allow": ["_id"] }],
