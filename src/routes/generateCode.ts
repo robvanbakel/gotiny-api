@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import GoTiny, { GoTinyObject } from "../mongoose";
-import { constructError, getTiny, urlCheck } from "../utils";
+import { Request, Response } from 'express';
+import GoTiny, { GoTinyObject } from '../mongoose';
+import { constructError, getTiny, urlCheck } from '../utils';
 
 interface StagedObject {
   long: string;
@@ -30,14 +30,14 @@ export default async (req: Request, res: Response) => {
       });
     });
   } else {
-    res.send(constructError("missing-argument", "No input provided"));
+    res.send(constructError('missing-argument', 'No input provided'));
     return;
   }
 
   const filteredStaged = staged.filter((obj) => obj.long);
 
   if (!filteredStaged.length) {
-    res.send(constructError("no-link-found", "Could not find a link"));
+    res.send(constructError('no-link-found', 'Could not find a link'));
     return;
   }
 
@@ -50,11 +50,11 @@ export default async (req: Request, res: Response) => {
   if (duplicatesArray.length) {
     res.send(
       constructError(
-        "duplicate-custom-codes",
+        'duplicate-custom-codes',
         `The following custom codes are being used multiple times: ${duplicatesArray.join(
-          ", "
-        )}`
-      )
+          ', ',
+        )}`,
+      ),
     );
     return;
   }
@@ -72,7 +72,7 @@ export default async (req: Request, res: Response) => {
     if (customCode.length < 4) {
       if (stagedLink.useFallback === false) {
         res.send(
-          constructError("custom-code-invalid", "Custom code too short")
+          constructError('custom-code-invalid', 'Custom code too short'),
         );
         return;
       }
@@ -83,7 +83,7 @@ export default async (req: Request, res: Response) => {
     // Send error if custom code is more than 32 characters long
     if (customCode.length > 32) {
       if (stagedLink.useFallback === false) {
-        res.send(constructError("custom-code-invalid", "Custom code too long"));
+        res.send(constructError('custom-code-invalid', 'Custom code too long'));
         return;
       }
 
@@ -95,9 +95,9 @@ export default async (req: Request, res: Response) => {
       if (stagedLink.useFallback === false) {
         res.send(
           constructError(
-            "custom-code-invalid",
-            "Custom code has two of the same symbols together"
-          )
+            'custom-code-invalid',
+            'Custom code has two of the same symbols together',
+          ),
         );
         return;
       }
@@ -109,9 +109,9 @@ export default async (req: Request, res: Response) => {
       if (stagedLink.useFallback === false) {
         res.send(
           constructError(
-            "custom-code-invalid",
-            "Custom code does not only contain lowercase letters, numbers and - or _ symbols."
-          )
+            'custom-code-invalid',
+            'Custom code does not only contain lowercase letters, numbers and - or _ symbols.',
+          ),
         );
         return;
       }
@@ -132,7 +132,7 @@ export default async (req: Request, res: Response) => {
         }
 
         resolve(null);
-      })
+      }),
     );
   });
 
@@ -140,21 +140,20 @@ export default async (req: Request, res: Response) => {
     await Promise.all(checkCostomDuplicates);
   } catch (custom) {
     res.send(
-      constructError("custom-code-taken", `Code already taken: ${custom}`)
+      constructError('custom-code-taken', `Code already taken: ${custom}`),
     );
     return;
   }
 
   const entries = filteredStaged.map(
-    (entry) =>
-      new GoTiny<GoTinyObject>({
-        long: entry.long,
-        code: entry.custom || getTiny(6),
-        customCode: !!entry.custom,
-        lastActive: null,
-        createdAt: Date.now(),
-        visited: 0,
-      })
+    (entry) => new GoTiny<GoTinyObject>({
+      long: entry.long,
+      code: entry.custom || getTiny(6),
+      customCode: !!entry.custom,
+      lastActive: null,
+      createdAt: Date.now(),
+      visited: 0,
+    }),
   );
 
   GoTiny.insertMany(entries, (error, docs) => {

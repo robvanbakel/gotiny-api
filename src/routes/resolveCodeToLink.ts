@@ -1,16 +1,16 @@
-import { Request, Response } from "express";
-import GoTiny from "../mongoose";
-import { constructError } from "../utils";
+import { Request, Response } from 'express';
+import GoTiny from '../mongoose';
+import { constructError } from '../utils';
 
 export default async (req: Request, res: Response) => {
   const goTinyObject = await GoTiny.findOne({ code: req.params.id });
 
   if (!goTinyObject) {
-    res.status(404).send(constructError("no-matches", "GoTiny link not found"));
+    res.status(404).send(constructError('no-matches', 'GoTiny link not found'));
     return;
   }
 
-  if (req.query.format === "json") {
+  if (req.query.format === 'json') {
     res.json({
       code: goTinyObject.code,
       long: goTinyObject.long,
@@ -24,6 +24,6 @@ export default async (req: Request, res: Response) => {
     {
       $set: { lastActive: Date.now() },
       $inc: { visited: 1 },
-    }
+    },
   );
 };

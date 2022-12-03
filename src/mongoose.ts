@@ -1,6 +1,6 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
-mongoose.connect(process.env.MONGO_DB!);
+mongoose.connect(process.env.MONGO_DB as string);
 
 export interface GoTinyObject {
   long: string;
