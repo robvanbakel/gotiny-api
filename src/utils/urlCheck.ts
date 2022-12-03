@@ -1,4 +1,4 @@
-export default (str: string) => {
+export default (str: string): string[] => {
   const regex = /(http(s)?:\/\/.)?[-a-z0-9@:%._\\+~#=]{1,2048}\.[a-z]{2,24}\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)/gi;
 
   const matches = str.match(regex);
