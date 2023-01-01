@@ -8,7 +8,9 @@
     "build": "tsc -p .",
     "prestart": "yarn build",
     "start": "node dist",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "pretest": "tsc",
+    "test": "node dist/utils/isVulnerableDomain.test.js"
   },
   "repository": {
     "type": "git",

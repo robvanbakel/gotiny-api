@@ -1,6 +1,12 @@
 import { Request, Response } from 'express';
 import GoTiny, { GoTinyObject } from '../mongoose';
-import { constructError, getTiny, urlCheck } from '../utils';
+
+import {
+  constructError,
+  getTiny,
+  urlCheck,
+  isVulnerableDomain,
+} from '../utils';
 
 interface StagedObject {
   long: string;
@@ -22,7 +28,7 @@ export default async (req: Request, res: Response) => {
       useFallback: req.body.useFallback,
     });
   } else if (Array.isArray(req.body) && req.body.length) {
-    req.body.forEach((obj) => {
+    req.body.forEach((obj: any) => {
       staged.push({
         long: urlCheck(obj.long)[0],
         custom: obj.custom,
@@ -52,9 +58,9 @@ export default async (req: Request, res: Response) => {
       constructError(
         'duplicate-custom-codes',
         `The following custom codes are being used multiple times: ${duplicatesArray.join(
-          ', ',
-        )}`,
-      ),
+          ', '
+        )}`
+      )
     );
     return;
   }
@@ -68,11 +74,23 @@ export default async (req: Request, res: Response) => {
 
     const customCode = stagedLink.custom.toLowerCase();
 
+    // Check if "domain/host" is vulnerable (and sends a custom error).
+    if (isVulnerableDomain(stagedLink?.long)) {
+      if (!stagedLink.useFallback /* falsy */) {
+        return res.send(
+          constructError(
+            'long-url-domain-invalid',
+            'URL already short, try again later'
+          )
+        );
+      }
+    }
+
     // Send error if custom code is less than 4 characters long
     if (customCode.length < 4) {
       if (stagedLink.useFallback === false) {
         res.send(
-          constructError('custom-code-invalid', 'Custom code too short'),
+          constructError('custom-code-invalid', 'Custom code too short')
         );
         return;
       }
@@ -96,8 +114,8 @@ export default async (req: Request, res: Response) => {
         res.send(
           constructError(
             'custom-code-invalid',
-            'Custom code has two of the same symbols together',
-          ),
+            'Custom code has two of the same symbols together'
+          )
         );
         return;
       }
@@ -110,8 +128,8 @@ export default async (req: Request, res: Response) => {
         res.send(
           constructError(
             'custom-code-invalid',
-            'Custom code does not only contain lowercase letters, numbers and - or _ symbols.',
-          ),
+            'Custom code does not only contain lowercase letters, numbers and - or _ symbols.'
+          )
         );
         return;
       }
@@ -132,7 +150,7 @@ export default async (req: Request, res: Response) => {
         }
 
         resolve(null);
-      }),
+      })
     );
   });
 
@@ -140,20 +158,21 @@ export default async (req: Request, res: Response) => {
     await Promise.all(checkCostomDuplicates);
   } catch (custom) {
     res.send(
-      constructError('custom-code-taken', `Code already taken: ${custom}`),
+      constructError('custom-code-taken', `Code already taken: ${custom}`)
     );
     return;
   }
 
   const entries = filteredStaged.map(
-    (entry) => new GoTiny<GoTinyObject>({
-      long: entry.long,
-      code: entry.custom || getTiny(6),
-      customCode: !!entry.custom,
-      lastActive: null,
-      createdAt: Date.now(),
-      visited: 0,
-    }),
+    (entry) =>
+      new GoTiny<GoTinyObject>({
+        long: entry.long,
+        code: entry.custom || getTiny(6),
+        customCode: !!entry.custom,
+        lastActive: null,
+        createdAt: Date.now(),
+        visited: 0,
+      })
   );
 
   GoTiny.insertMany(entries, (error, docs) => {
