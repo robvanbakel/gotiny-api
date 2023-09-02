@@ -61,7 +61,7 @@ export default async (req: Request, res: Response) => {
 
   const customCodeRegex = /^[a-z0-9_-]+$/;
 
-  const checkCostomDuplicates: Promise<{ _id: object } | null>[] = [];
+  const checkCustomDuplicates: Promise<{ _id: object } | null>[] = [];
 
   filteredStaged.forEach((stagedLink) => {
     if (!stagedLink.custom) return;
@@ -119,7 +119,7 @@ export default async (req: Request, res: Response) => {
       stagedLink.custom = undefined;
     }
 
-    checkCostomDuplicates.push(
+    checkCustomDuplicates.push(
       new Promise(async (resolve, reject) => {
         const codeTaken = await GoTiny.exists({ code: stagedLink.custom });
 
@@ -137,7 +137,7 @@ export default async (req: Request, res: Response) => {
   });
 
   try {
-    await Promise.all(checkCostomDuplicates);
+    await Promise.all(checkCustomDuplicates);
   } catch (custom) {
     res.send(
       constructError('custom-code-taken', `Code already taken: ${custom}`),
