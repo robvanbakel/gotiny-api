@@ -1,3 +1,9 @@
+> ### GoTiny is no longer available
+>
+> Read more: [GoTiny is shutting down](https://github.com/robvanbakel/gotiny-api/issues/11)
+
+---
+
 # GoTiny API
 
 GoTiny is a link shortener API that's built with a failproof user experience as its main goal, for both the visitors of the landing page as well as developers. GoTiny links are all lowercase and don't include characters that could be confused with each other (e.g. o/0 or 1/i/l).
